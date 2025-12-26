@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   return (
@@ -17,10 +18,13 @@ const Hero = () => {
               QuickDraft helps students and professionals create clean,
               structured reports from simple inputs.
             </p>
+
             <div className="mt-10 flex items-center gap-6">
-              <button className="px-6 py-3 rounded-full bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition cursor-pointer">
-                Get started for free
-              </button>
+              <Link to="/signup">
+                <button className="px-6 py-3 rounded-full bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition cursor-pointer">
+                  Get started for free
+                </button>
+              </Link>
               {/* <span className="text-sm text-slate-500">
                 No credit card required
               </span> */}
