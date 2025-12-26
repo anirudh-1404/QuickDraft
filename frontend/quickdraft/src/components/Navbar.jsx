@@ -40,9 +40,11 @@ const Navbar = () => {
 
           {/* right */}
           <div className="flex items-center gap-4">
-            <button className="text-sm text-slate-700 hover:text-slate-900 transition cursor-pointer">
-              Login
-            </button>
+            <Link to="/login">
+              <button className="text-sm text-slate-700 hover:text-slate-900 transition cursor-pointer">
+                Login
+              </button>
+            </Link>
             <Link to="/signup">
               <button className="text-sm px-4 py-2 rounded-full bg-slate-900 text-white hover:bg-blue-600 transition cursor-pointer">
                 Get Started
