@@ -1,4 +1,5 @@
 import { User } from "../models/userSchema.js";
+import genToken from "../utils/authToken.js";
 import { comparePassword, hashedPassword } from "../utils/hashedPassword.js";
 
 export const registerUser = async (req, res, next) => {
@@ -26,6 +27,13 @@ export const registerUser = async (req, res, next) => {
       role,
     });
 
+    const token = await genToken(user._id);
+    res.cookie("token", token, {
+      httpOnly: true,
+      sameSite: "none",
+      secure: false,
+      maxAge: 24 * 60 * 60 * 2000,
+    });
     return res.status(201).json({
       message: "User created successfully",
       data: { user: user, id: user._id, role: user.role },
@@ -55,6 +63,13 @@ export const loginController = async (req, res, next) => {
 
     const comparePass = await comparePassword(password, isEmailExists.password);
     if (comparePass) {
+      const token = await genToken(isEmailExists._id);
+      res.cookie("token", token, {
+        httpOnly: true,
+        sameSite: "none",
+        secure: false,
+        maxAge: 24 * 60 * 60 * 2000,
+      });
       return res.status(200).json({
         message: "User logged in!",
         data: { id: isEmailExists._id, name: isEmailExists.name },
