@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   return (
@@ -9,9 +10,11 @@ const Dashboard = () => {
             <h1 className="text-2xl font-semibold text-slate-900">
               My Reports
             </h1>
-            <button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 transition cursor-pointer">
-              Create new report
-            </button>
+            <Link to="/create">
+              <button className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-700 transition cursor-pointer">
+                Create new report
+              </button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -43,9 +46,9 @@ const Dashboard = () => {
             <p className="mt-2 text-sm text-slate-500">
               Create your first report to get started
             </p>
-            <button className="mt-6 px-5 py-2 rounded-lg bg-blue-600 text-white text-sm cursor-pointer">
+            {/* <button className="mt-6 px-5 py-2 rounded-lg bg-blue-600 text-white text-sm cursor-pointer">
               Create report
-            </button>
+            </button> */}
           </div>
         </div>
       </section>
