@@ -1,6 +1,48 @@
-import React from "react";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import API from "../../API/Interceptor";
 
 const Login = () => {
+  const [data, setData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const navigate = useNavigate();
+
+  const loginFunction = async (formData) => {
+    try {
+      const response = await API.post("/login", formData);
+      if (response.status === 200) {
+        toast.success("Logged in successfully");
+        navigate("/");
+      }
+      console.log(response);
+    } catch (err) {
+      toast.error(err.message || "Something went wrong");
+      console.log("error", err);
+    }
+  };
+
+  const handleChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    loginFunction(data);
+
+    setData({
+      email: "",
+      password: "",
+    });
+  };
+
   return (
     <>
       <section className="min-h-screen bg-slate-50 flex items-center justify-center px-6 pt-32 pb-32">
@@ -13,14 +55,16 @@ const Login = () => {
               Login to continue to QuickDraft
             </p>
           </div>
-          <form action="" className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="flex flex-col gap-1">
               <label htmlFor="email-address" className="text-sm text-slate-700">
                 Email address
               </label>
               <input
                 type="email"
-                name=""
+                name="email"
+                onChange={handleChange}
+                value={data.email}
                 id="email-address"
                 placeholder="you@example.com"
                 className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -32,7 +76,9 @@ const Login = () => {
               </label>
               <input
                 type="password"
-                name=""
+                name="password"
+                onChange={handleChange}
+                value={data.password}
                 id="password"
                 placeholder="********"
                 className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"

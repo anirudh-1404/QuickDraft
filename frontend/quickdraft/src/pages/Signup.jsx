@@ -1,7 +1,53 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
+import API from "../../API/Interceptor";
 
 const Signup = () => {
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const signupapi = async (formData) => {
+    try {
+      const response = await API.post("/signup", formData);
+      if (response.status === 201) {
+        toast.success(response.data.message || "User created successfully");
+        navigate("/login");
+      }
+      console.log(response.data);
+    } catch (err) {
+      toast.error(err.message || "Something went wrong!");
+      console.log("errorrrrrrr", err.message);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    signupapi(data);
+
+    console.log("Data", data);
+
+    setData({
+      email: "",
+      name: "",
+      password: "",
+      confirmPassword: "",
+    });
+  };
+
   return (
     <>
       <section className="min-h-screen bg-slate-50 flex items-center justify-center px-6 pt-32 pb-32">
@@ -14,14 +60,17 @@ const Signup = () => {
               Start creating professional drafts in a minute
             </p>
           </div>
-          <form action="" className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="flex flex-col gap-1">
               <label htmlFor="full-name" className="text-sm text-slate-700">
                 Full Name
               </label>
               <input
                 type="text"
+                name="name"
                 id="full-name"
+                value={data.name}
+                onChange={handleChange}
                 className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="John Doe"
               />
@@ -32,6 +81,9 @@ const Signup = () => {
               </label>
               <input
                 type="email"
+                name="email"
+                value={data.email}
+                onChange={handleChange}
                 className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="you@example.com"
                 id="email-address"
@@ -42,7 +94,10 @@ const Signup = () => {
                 Password
               </label>
               <input
+                name="password"
                 type="password"
+                value={data.password}
+                onChange={handleChange}
                 className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="**********"
                 id="password"
@@ -57,6 +112,9 @@ const Signup = () => {
               </label>
               <input
                 type="password"
+                name="confirmPassword"
+                value={data.confirmPassword}
+                onChange={handleChange}
                 className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="**********"
                 id="confirm-password"

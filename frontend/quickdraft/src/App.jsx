@@ -8,6 +8,8 @@ import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import CreateReport from "./pages/CreateReport";
 
+import { Toaster } from "react-hot-toast";
+
 const App = () => {
   const router = createBrowserRouter([
     {
@@ -40,6 +42,13 @@ const App = () => {
 
   return (
     <>
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          success: { duration: 2500 },
+          error: { duration: 3000 },
+        }}
+      />
       <RouterProvider router={router} />
     </>
   );
