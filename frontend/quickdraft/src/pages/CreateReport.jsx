@@ -1,6 +1,53 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import API from "../../API/Interceptor";
+import toast from "react-hot-toast";
 
 const CreateReport = () => {
+  const [data, setData] = useState({
+    title: "",
+    type: "",
+    rawInput: "",
+    tags: "",
+  });
+  const navigate = useNavigate();
+
+  const createReportFunction = async (formData) => {
+    try {
+      let response = await API.post("/report/create", formData, {
+        withCredentials: true,
+      });
+      if (response.status === 201) {
+        toast.success("Report created");
+        navigate("/dashboard");
+      }
+      console.log(response);
+    } catch (err) {
+      toast.error(err.message || "Somethong went wrong while creating report!");
+      console.log("error", err.message);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    createReportFunction(data);
+
+    setData({
+      title: "",
+      type: "",
+      rawInput: "",
+      tags: "",
+    });
+  };
+
+  const handleChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
     <>
       <section className="min-h-screen bg-slate-50 px-6 pt-32 pb-24">
@@ -15,7 +62,7 @@ const CreateReport = () => {
           </div>
           {/* card */}
           <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
-            <form action="" className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div className="flex flex-col gap-1">
                 <label
                   htmlFor="report-title"
@@ -25,6 +72,9 @@ const CreateReport = () => {
                 </label>
                 <input
                   type="text"
+                  name="title"
+                  value={data.title}
+                  onChange={handleChange}
                   placeholder="e.g. Weekly Work Report"
                   id="report-title"
                   className="px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none "
@@ -35,14 +85,16 @@ const CreateReport = () => {
                   Report type
                 </label>
                 <select
-                  name=""
+                  name="type"
+                  value={data.type}
+                  onChange={handleChange}
                   id="report-type"
                   className="px-4 py-2 rounded-lg border border-slate-300 bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 >
-                  <option value="">Internship</option>
-                  <option value="">Weekly</option>
-                  <option value="">Project</option>
-                  <option value="">Custom</option>
+                  <option value="internship">Internship</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="project">Project</option>
+                  <option value="custom">Custom</option>
                 </select>
               </div>
 
@@ -51,7 +103,9 @@ const CreateReport = () => {
                   Your points / notes
                 </label>
                 <textarea
-                  name=""
+                  name="rawInput"
+                  value={data.rawInput}
+                  onChange={handleChange}
                   placeholder="Multiline rough points"
                   id="note-points"
                   className="min-h-[10rem] px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
@@ -64,6 +118,9 @@ const CreateReport = () => {
                 </label>
                 <input
                   type="text"
+                  value={data.tags}
+                  name="tags"
+                  onChange={handleChange}
                   id="tags"
                   placeholder="work, internship, weekly"
                   className="px-4 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:outline-none"
