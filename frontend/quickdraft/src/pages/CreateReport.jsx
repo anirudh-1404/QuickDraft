@@ -10,6 +10,7 @@ const CreateReport = () => {
     rawInput: "",
     tags: "",
   });
+  const [errors, setErrors] = useState("");
   const navigate = useNavigate();
 
   const createReportFunction = async (formData) => {

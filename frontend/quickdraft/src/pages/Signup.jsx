@@ -10,6 +10,7 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
+  const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
 
@@ -18,6 +19,43 @@ const Signup = () => {
       ...data,
       [e.target.name]: e.target.value,
     });
+
+    setErrors({
+      ...errors,
+      [e.target.name]: "",
+    });
+  };
+
+  const validate = () => {
+    let newErrors = {};
+
+    if (!data.name.trim()) {
+      newErrors.name = "Name cannot be empty";
+    }
+
+    if (!data.email.trim()) {
+      newErrors.email = "Email cannot be empty";
+    }
+
+    if (!data.password.trim()) {
+      newErrors.password = "Password cannot be empty";
+    }
+
+    if (!data.confirmPassword.trim()) {
+      newErrors.confirmPassword = "Confirm password cannot be empty";
+    }
+
+    if (
+      data.password &&
+      data.confirmPassword &&
+      data.password !== data.confirmPassword
+    ) {
+      newErrors.confirmPassword = "Passwords do not match!";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
   };
 
   const signupapi = async (formData) => {
@@ -36,9 +74,10 @@ const Signup = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    signupapi(data);
 
-    console.log("Data", data);
+    if (!validate()) return;
+
+    signupapi(data);
 
     setData({
       email: "",
@@ -68,40 +107,55 @@ const Signup = () => {
               <input
                 type="text"
                 name="name"
-                id="full-name"
                 value={data.name}
                 onChange={handleChange}
-                className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`px-4 py-2 rounded-lg border ${
+                  errors.name ? "border-red-500" : "border-slate-300"
+                }`}
                 placeholder="John Doe"
               />
+
+              {errors.name && (
+                <p className="text-xs text-red-500 mt-1">{errors.name}</p>
+              )}
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="email-address" className="text-sm text-slate-700">
                 Email address
               </label>
               <input
-                type="email"
+                type="text"
                 name="email"
                 value={data.email}
                 onChange={handleChange}
-                className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`px-4 py-2 rounded-lg border ${
+                  errors.email ? "border-red-500" : "border-slate-300"
+                }`}
                 placeholder="you@example.com"
-                id="email-address"
               />
+
+              {errors.email && (
+                <p className="text-xs text-red-500 mt-1">{errors.email}</p>
+              )}
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="password" className="text-sm text-slate-700">
                 Password
               </label>
               <input
-                name="password"
                 type="password"
+                name="password"
                 value={data.password}
                 onChange={handleChange}
-                className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className={`px-4 py-2 rounded-lg border ${
+                  errors.password ? "border-red-500" : "border-slate-300"
+                }`}
                 placeholder="**********"
-                id="password"
               />
+
+              {errors.password && (
+                <p className="text-xs text-red-500 mt-1">{errors.password}</p>
+              )}
             </div>
             <div className="flex flex-col gap-1">
               <label
@@ -115,10 +169,16 @@ const Signup = () => {
                 name="confirmPassword"
                 value={data.confirmPassword}
                 onChange={handleChange}
-                className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="**********"
-                id="confirm-password"
+                className={`px-4 py-2 rounded-lg border ${
+                  errors.confirmPassword ? "border-red-500" : "border-slate-300"
+                }`}
               />
+
+              {errors.confirmPassword && (
+                <p className="text-xs text-red-500 mt-1">
+                  {errors.confirmPassword}
+                </p>
+              )}
             </div>
             <button className="w-full mt-4 px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition cursor-pointer">
               Create account
