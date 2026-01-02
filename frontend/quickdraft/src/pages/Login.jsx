@@ -8,8 +8,24 @@ const Login = () => {
     email: "",
     password: "",
   });
+  const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
+
+  const validation = () => {
+    let newErrors = {};
+
+    if (!data.email.trim()) {
+      newErrors.email = "Email cannot be empty";
+    }
+
+    if (!data.password.trim()) {
+      newErrors.password = "Password cannot be empty";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const loginFunction = async (formData) => {
     try {
@@ -30,10 +46,17 @@ const Login = () => {
       ...data,
       [e.target.name]: e.target.value,
     });
+
+    setErrors({
+      ...errors,
+      [e.target.name]: "",
+    });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!validation()) return;
 
     loginFunction(data);
 
@@ -63,12 +86,17 @@ const Login = () => {
               <input
                 type="email"
                 name="email"
-                onChange={handleChange}
                 value={data.email}
-                id="email-address"
+                onChange={handleChange}
+                className={`px-4 py-2 rounded-lg border ${
+                  errors.email ? "border-red-500" : "border-slate-300"
+                }`}
                 placeholder="you@example.com"
-                className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+
+              {errors.email && (
+                <p className="text-xs text-red-500 mt-1">{errors.email}</p>
+              )}
             </div>
             <div className="flex flex-col gap-1">
               <label htmlFor="password" className="text-sm text-slate-700">
@@ -77,12 +105,17 @@ const Login = () => {
               <input
                 type="password"
                 name="password"
-                onChange={handleChange}
                 value={data.password}
-                id="password"
+                onChange={handleChange}
+                className={`px-4 py-2 rounded-lg border ${
+                  errors.password ? "border-red-500" : "border-slate-300"
+                }`}
                 placeholder="********"
-                className="px-4 py-2 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
+
+              {errors.password && (
+                <p className="text-xs text-red-500 mt-1">{errors.password}</p>
+              )}
             </div>
             <div className="flex items-center justify-between text-sm">
               <label
